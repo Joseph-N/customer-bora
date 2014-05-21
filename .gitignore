@@ -43,7 +43,7 @@ db/*.sqlite3
 /nbproject/
 
 # RubyMine project files
-.idea/
+.idea/*
 
 # Textmate project files
 /*.tmproj
