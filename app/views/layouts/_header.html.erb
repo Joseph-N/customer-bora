@@ -1,0 +1,10 @@
+<!-- ******HEADER****** -->
+<header id="top" class="header navbar-fixed-top">
+  <div class="container">
+    <h1 class="logo pull-left">
+      <%= link_to image_tag("logo.png", class: "logo-image img-responsive", alt: "logo"),
+                  current_page?(root_path) ? '#promo' : root_path, class: current_page?(root_path) ? "scrollto" : "" %>
+    </h1><!--//logo-->
+    <%= render 'layouts/navigation' %>
+  </div>
+</header><!--//header-->

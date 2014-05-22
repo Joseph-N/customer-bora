@@ -1,0 +1,15 @@
+// Place all the styles related to the users controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+.top-30{
+  margin-top: 30px;
+}
+
+.thumbnail{
+  border: none;
+}
+
+.panel-body .nav-pills>li.active>a {
+  background-color: #56bc94;
+  color: #ffffff;
+}

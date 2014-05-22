@@ -1,0 +1,47 @@
+<!-- ******PROMO****** -->
+<section id="promo" class="promo section offset-header has-pattern">
+  <div class="container">
+    <div class="row">
+      <div class="overview col-md-8 col-sm-12 col-xs-12">
+        <h2 class="title">Karibu Customer Bora</h2>
+        <ul class="summary">
+          <li>Register for a customer bora account</li>
+          <li>Verify your account using the confirmation code sent</li>
+          <li>Start submiting product serial numbers</li>
+          <li>After buying products, keep the packaging for collection after use</li>
+          <li>Customer bora will then collect the trash afterwards</li>
+        </ul>
+        <div class="download-area">
+          <% if user_signed_in? %>
+              <%= link_to raw('<i class="fa fa-lg fa-user"></i> My Profile'),  user_path(current_user),
+                          class: "btn btn-danger btn-cons account" %>
+              <%= link_to raw('<span class="badge">42</span> Submissions'),  user_path(current_user),
+                          class: "btn btn-info btn-cons account" %>
+
+          <% else %>
+              <%= link_to raw('<i class="fa fa-lg fa-plus-square"></i> Sign Up'),  new_user_registration_path,
+                          class: "btn btn-success btn-cons account" %>
+              <%= link_to raw('<i class="fa fa-lg fa-sign-in"></i> Log In'), new_user_session_path,
+                          class: "btn btn-warning btn-cons account" %>
+
+          <% end %>
+          <div class="note text-center">
+            <% if user_signed_in? %>
+                <p>Hi <%= current_user.name %>! You are signed in<br> Visit your profile! </p>
+            <% else %>
+                <p>Sign Up or Login<br />And be a Customer Bora</p>
+            <% end %>
+            <span class="left-arrow"></span>
+            <span class="right-arrow"></span>
+          </div><!--//note-->
+        </div>
+      </div><!--//overview-->
+
+      <%= render 'home/android' %>
+
+
+
+
+    </div><!--//row-->
+  </div><!--//container-->
+</section><!--//promo-->
