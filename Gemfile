@@ -4,7 +4,11 @@ source 'https://rubygems.org'
 gem 'rails', '4.0.2'
 
 # Use sqlite3 as the database for Active Record
-gem 'sqlite3', :group => :development
+group :development do
+  gem "letter_opener"
+  gem 'sqlite3'
+end
+
 
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 4.0.0'
@@ -27,6 +31,8 @@ gem 'jbuilder', '~> 1.2'
 gem "font-awesome-rails"
 gem 'devise'
 gem "gritter", "1.1.0"
+gem 'curb', '~> 0.8.5'
+gem 'rails_admin'
 
 group :doc do
   # bundle exec rake doc:rails generates the API under doc/api.

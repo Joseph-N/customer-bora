@@ -15,5 +15,7 @@
  *= require animate.min
  *= require styles
  *= require gritter
- *= require_tree .
+ *= require home
+ *= require users
+
  */

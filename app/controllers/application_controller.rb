@@ -10,10 +10,10 @@ class ApplicationController < ActionController::Base
   def configure_permitted_parameters
     devise_parameter_sanitizer.for(:sign_up) { |u| u.permit(:name, :"birthday(3i)", :"birthday(2i)", :"birthday(1i)",
                                                             :location, :email, :password, :phone,:password_confirmation) }
-    devise_parameter_sanitizer.for(:sign_in) { |u| u.permit(:phone, :password) }
+    devise_parameter_sanitizer.for(:sign_in) { |u| u.permit(:phone, :password, :remember_me) }
   end
 
   def after_sign_in_path_for(resource)
-    user_path(current_user)
+    current_user.admin? ? rails_admin_path : user_path(current_user)
   end
 end

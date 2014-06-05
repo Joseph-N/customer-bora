@@ -19,6 +19,7 @@
 //= require jquery.scrollTo.min
 //= require jquery.placeholder
 //= require jquery.flexslider-min
+//= require jquery.maskedinput
 //= require main
 //= require gritter
 //= require_tree .

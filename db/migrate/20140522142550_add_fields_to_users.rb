@@ -4,5 +4,7 @@ class AddFieldsToUsers < ActiveRecord::Migration
     add_column :users, :birthday, :date
     add_column :users, :location, :string
     add_column :users, :phone, :string
+
+    add_index :users, :phone, :unique => true
   end
 end
