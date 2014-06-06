@@ -23,8 +23,8 @@ production:
   encoding: unicode
   database: customerbora_production
   pool: 25
-  username: jose
-  password: "4114"
+  username: rbglive
+  password: "rbglive2014"
   template: template0
   host: localhost
 

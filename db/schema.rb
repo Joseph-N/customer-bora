@@ -18,12 +18,12 @@ ActiveRecord::Schema.define(version: 20140605232202) do
 
   create_table "aliases", force: true do |t|
     t.string   "name"
-    t.integer  "product_id"
+    t.integer  "submission_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  add_index "aliases", ["product_id"], name: "index_aliases_on_product_id", using: :btree
+  add_index "aliases", ["submission_id"], name: "index_aliases_on_submission_id", using: :btree
 
   create_table "faqs", force: true do |t|
     t.string   "question"
