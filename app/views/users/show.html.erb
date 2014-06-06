@@ -22,27 +22,27 @@
             <tbody>
             <tr>
               <td>Name: </td>
-              <td><%= current_user.name %></td>
+              <td><%= @user.name %></td>
 
             </tr>
             <tr>
               <td>Email: </td>
-              <td><%= current_user.email %></td>
+              <td><%= @user.email %></td>
 
             </tr>
             <tr>
               <td>Location: </td>
-              <td><%= current_user.location %></td>
+              <td><%= @user.location %></td>
 
             </tr>
             <tr>
               <td>Phone No: </td>
-              <td><%= current_user.phone %></td>
+              <td><%= @user.phone %></td>
 
             </tr>
             <tr>
               <td>Age: </td>
-              <td><%= user_age(current_user) %></td>
+              <td><%= user_age(@user) %></td>
 
             </tr>
             </tbody>
@@ -52,39 +52,91 @@
       </div>
       <div class="col-md-9">
         <div class="row">
-          <div class="col-md-4">
-            <div class="panel panel-success">
-              <div class="panel-heading">
-                <h3 class="panel-title">Panel title</h3>
-              </div>
-              <div class="panel-body">
-                Panel content
-              </div>
-            </div>
-          </div>
 
           <div class="col-md-4">
             <div class="panel panel-success">
               <div class="panel-heading">
-                <h3 class="panel-title">Panel title</h3>
+                <div class="row">
+                  <div class="col-xs-4">
+                    <i class="fa fa-mobile-phone fa-5x"></i>
+                  </div>
+                  <div class="col-xs-8 text-right">
+                    <p class="announcement-heading"><%= @user.submissions.count %></p>
+                    <p class="announcement-text">Total Submissions!</p>
+                  </div>
+                </div>
               </div>
-              <div class="panel-body">
-                Panel content
-              </div>
+              <a href="#">
+                <div class="panel-footer announcement-bottom">
+                  <div class="row">
+                    <div class="col-xs-6">
+                      All submissions
+                    </div>
+                    <div class="col-xs-6 text-right">
+                      <i class="fa fa-arrow-circle-right"></i>
+                    </div>
+                  </div>
+                </div>
+              </a>
             </div>
           </div>
 
           <div class="col-md-4">
-            <div class="panel panel-success">
+            <div class="panel panel-info">
               <div class="panel-heading">
-                <h3 class="panel-title">Panel title</h3>
+                <div class="row">
+                  <div class="col-xs-6">
+                    <i class="fa fa-sign-in fa-5x"></i>
+                  </div>
+                  <div class="col-xs-6 text-right">
+                    <p class="announcement-heading"><%= @user.sign_in_count %></p>
+                    <p class="announcement-text">Signin Counts!</p>
+                  </div>
+                </div>
               </div>
-              <div class="panel-body">
-                Panel content
-              </div>
+              <a href="#">
+                <div class="panel-footer announcement-bottom">
+                  <div class="row">
+                    <div class="col-xs-8">
+                      All Signin counts
+                    </div>
+                    <div class="col-xs-4 text-right">
+                      <i class="fa fa-arrow-circle-right"></i>
+                    </div>
+                  </div>
+                </div>
+              </a>
             </div>
           </div>
 
+
+          <div class="col-md-4">
+            <div class="panel panel-warning">
+              <div class="panel-heading">
+                <div class="row">
+                  <div class="col-xs-6">
+                    <i class="fa fa-bar-chart-o fa-5x"></i>
+                  </div>
+                  <div class="col-xs-6 text-right">
+                    <p class="announcement-heading">18</p>
+                    <p class="announcement-text">Total Points!</p>
+                  </div>
+                </div>
+              </div>
+              <a href="#">
+                <div class="panel-footer announcement-bottom">
+                  <div class="row">
+                    <div class="col-xs-6">
+                      All Points
+                    </div>
+                    <div class="col-xs-6 text-right">
+                      <i class="fa fa-arrow-circle-right"></i>
+                    </div>
+                  </div>
+                </div>
+              </a>
+            </div>
+          </div>
 
           </div>
         <div class="row">
@@ -107,24 +159,14 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr>
-                  <td>1</td>
-                  <td>Mark</td>
-                  <td>Otto</td>
-                  <td>@mdo</td>
-                </tr>
-                <tr>
-                  <td>2</td>
-                  <td>Jacob</td>
-                  <td>Thornton</td>
-                  <td>@fat</td>
-                </tr>
-                <tr>
-                  <td>3</td>
-                  <td>Larry</td>
-                  <td>the Bird</td>
-                  <td>@twitter</td>
-                </tr>
+                <% @user.submissions.each_with_index do |submission, index| %>
+                    <tr>
+                      <td><%= index += 1 %></td>
+                      <td><%= submission.name %></td>
+                      <td><%= submission.serial_no %></td>
+                      <td><%= submission.created_at.strftime('%d-%b-%Y at %I:%M%p') %></td>
+                    </tr>
+                <% end %>
                 </tbody>
               </table>
             </div>

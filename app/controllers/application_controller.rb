@@ -11,6 +11,10 @@ class ApplicationController < ActionController::Base
     devise_parameter_sanitizer.for(:sign_up) { |u| u.permit(:name, :"birthday(3i)", :"birthday(2i)", :"birthday(1i)",
                                                             :location, :email, :password, :phone,:password_confirmation) }
     devise_parameter_sanitizer.for(:sign_in) { |u| u.permit(:phone, :password, :remember_me) }
+
+    devise_parameter_sanitizer.for(:account_update) {|u| u.permit(:name, :"birthday(3i)", :"birthday(2i)", :"birthday(1i)",
+                                                                  :location, :email, :password, :phone,:password_confirmation,
+                                                                  :current_password)}
   end
 
   def after_sign_in_path_for(resource)

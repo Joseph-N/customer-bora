@@ -3,6 +3,7 @@ class UsersController < ApplicationController
   before_filter :correct_user
 
   def show
+    @user = current_user
   end
 
   private

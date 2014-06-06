@@ -19,7 +19,7 @@
           <% end %>
 
           <li class="dropdown">
-            <%= link_to raw("Hi #{current_user.name} <b class='caret'></b>"), '#', class: "dropdown-toggle",
+            <%= link_to raw("Hi #{current_user.name.split(" ").first} <b class='caret'></b>"), '#', class: "dropdown-toggle",
                         "data-toggle" => "dropdown" %>
             <ul class="dropdown-menu" role="menu" aria-labelledby="drop3">
               <li role="presentation">

@@ -97,34 +97,33 @@
   <div class="container">
     <div class="row">
       <h2 class="title text-center">Frequently Asked Questions</h2>
-      <div class="faq-col col-md-6 col-sm-6 col-xs-12">
-        <div class="item">
-          <h3 class="question"><i class="fa fa-question-circle"></i>How does Customer Bora Work?</h3>
-          <p class="answer">Proin scelerisque magna ac eros aliquam aliquam id in lacus. Morbi quam tortor, consequat at orci non, vulputate volutpat libero. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Aenean sagittis laoreet urna eu ornare. Aenean tempor, leo vel eleifend porttitor, nibh libero ultricies est, sit amet ultricies magna enim et turpis. Donec aliquam velit eu sollicitudin cursus.</p>
-        </div><!--//item-->
-        <div class="item">
-          <h3 class="question"><i class="fa fa-question-circle"></i>How do I become a customer bora?</h3>
-          <p class="answer">Proin scelerisque magna ac eros aliquam aliquam id in lacus. Morbi quam tortor, consequat at orci non, vulputate volutpat libero. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Aenean sagittis laoreet urna eu ornare.</p>
-        </div><!--//item-->
-        <div class="item">
-          <h3 class="question"><i class="fa fa-question-circle"></i>What are the benefits of joining customer bora</h3>
-          <p class="answer">Proin scelerisque magna ac eros aliquam aliquam id in lacus. Morbi quam tortor, consequat at orci non, vulputate volutpat libero. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Aenean sagittis laoreet urna eu ornare. Aenean tempor, leo vel eleifend porttitor. Aenean tempor, leo vel eleifend porttitor, nibh libero ultricies est.</p>
-        </div><!--//item-->
-      </div><!--//faq-col-->
-      <div class="faq-col col-md-6 col-sm-6 col-xs-12">
-        <div class="item">
-          <h3 class="question"><i class="fa fa-question-circle"></i>What do you do with the disposed trash?</h3>
-          <p class="answer">Proin scelerisque magna ac eros aliquam aliquam id in lacus. Morbi quam tortor, consequat at orci non, vulputate volutpat libero. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Aenean sagittis laoreet urna eu ornare.Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Aenean sagittis laoreet urna eu ornare. Aenean tempor, leo vel eleifend porttitor, nibh libero ultricies est, sit amet ultricies magna enim et turpis. Donec aliquam velit eu sollicitudin cursus.</p>
-        </div><!--//item-->
-        <div class="item">
-          <h3 class="question"><i class="fa fa-question-circle"></i>Can I ipsum dolor sit amet nascetur ridiculus?</h3>
-          <p class="answer">Proin scelerisque magna ac eros aliquam aliquam id in lacus. Morbi quam tortor, consequat at orci non, vulputate volutpat libero. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Aenean sagittis laoreet urna eu ornare.</p>
-        </div><!--//item-->
-        <div class="item">
-          <h3 class="question"><i class="fa fa-question-circle"></i>How can I proin scelerisque magna?</h3>
-          <p class="answer">Aenean tempor, leo vel eleifend porttitor, nibh libero ultricies est, sit amet ultricies magna enim et turpis. Donec aliquam velit eu sollicitudin cursus.Proin scelerisque magna ac eros aliquam aliquam id in lacus. Morbi quam tortor, consequat at orci non, vulputate volutpat libero. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Aenean sagittis laoreet urna eu ornare. </p>
-        </div><!--//item-->
-      </div><!--//faq-col-->
+      <% if @faqs.any? %>
+          <div class="faq-col col-md-6 col-sm-6 col-xs-12">
+            <% @faqs.first(@count/2).each do |faq| %>
+                <div class="item">
+                  <h3 class="question"><i class="fa fa-question-circle"></i><%= faq.question %></h3>
+                  <p class="answer"> <%= faq.answer %></p>
+                </div><!--//item-->
+            <% end %>
+          </div><!--//faq-col-->
+
+
+          <div class="faq-col col-md-6 col-sm-6 col-xs-12">
+            <% @faqs.last(@count - (@count/2)).each do |faq| %>
+                <div class="item">
+                  <h3 class="question"><i class="fa fa-question-circle"></i><%= faq.question %></h3>
+                  <p class="answer"> <%= faq.answer %></p>
+                </div><!--//item-->
+            <% end %>
+          </div><!--//faq-col-->
+      <% else %>
+          <div class="alert alert-success alert-dismissable">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+            This will be CustomerBora's FAQ section. We are gathering the most frequently asked questions at the moment.
+            Please check back soon!
+
+          </div>
+      <% end %>
     </div><!--//row-->
     <div class="more text-center">
       <h4 class="title">More questions?</h4>

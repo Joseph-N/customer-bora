@@ -1,5 +1,7 @@
 class HomeController < ApplicationController
   def index
+    @faqs = Faq.all
+    @count = @faqs.count
   end
 
   def contact

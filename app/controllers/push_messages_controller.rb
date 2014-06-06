@@ -10,7 +10,9 @@ class PushMessagesController < ApplicationController
     contents =  push_msg.message.split('#')
     if contents.size > 1 and contents.size <= 2
       if contents.first.downcase == "register"
-        user_from_sms(contents.last, push_msg.from)
+        user_from_sms(contents.last.titleize, push_msg.from)
+      elsif contents.first.downcase == "location"
+        location_from_sms(contents.last.titleize, push_msg.from)
       else
         product_from_sms(contents.first, contents.last, push_msg.from)
       end
@@ -57,7 +59,25 @@ class PushMessagesController < ApplicationController
       end
 
     else
-      message = "It seems you are not registered yet. To start submitting products, send register#YOUR NAME to #{ENV['SHORT_CODE']}"
+      message = "You need to be registered to start submitting production.\r\n\r\nSend register#YOUR NAME to #{ENV['SHORT_CODE']}"
+      $smsGateway.send_message(phone_no, message, ENV['SHORT_CODE'])
+    end
+
+  end
+
+  def location_from_sms(location, phone_no)
+    user = User.find_by phone: phone_no
+    if user
+      if user.update_attribute(:location,location)
+        message = "Your location was successfully updated to: #{location}"
+        $smsGateway.send_message(phone_no, message, ENV['SHORT_CODE'])
+      else
+        errors = user.errors.full_messages
+        message = "Ooops, there was some errors in your submition. Errors: #{errors.join(',')}"
+        $smsGateway.send_message(phone_no, message, ENV['SHORT_CODE'])
+      end
+    else
+      message = "You need to be registered to set/update your location.\r\n\r\nSend register#YOUR NAME to #{ENV['SHORT_CODE']}"
       $smsGateway.send_message(phone_no, message, ENV['SHORT_CODE'])
     end
 
