@@ -34,6 +34,8 @@ gem "gritter", "1.1.0"
 gem 'curb', '~> 0.8.5'
 gem 'rails_admin'
 gem 'thin'
+gem 'twitter'
+gem 'twitter-text'
 
 group :doc do
   # bundle exec rake doc:rails generates the API under doc/api.

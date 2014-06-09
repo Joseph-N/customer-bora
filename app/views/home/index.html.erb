@@ -138,52 +138,25 @@
 <section id="testimonials" class="testimonials section">
   <div class="container">
     <div class="row">
-      <h2 class="title text-center">What do people think?</h2>
+      <h2 class="title text-center">What are people saying?</h2>
+      <% $TweetBot.mentions.take(3).each do |mention| %>
       <div class="item col-md-4 col-sm-4">
         <div class="quote-box">
           <i class="fa fa-quote-left"></i>
           <blockquote class="quote">
-            <a href="index.html#">@customerbora</a> I love this #app. Lorem ipsum dolor sit amet, consectetur adipiscing elit. #Mobile
+            <%= auto_link(mention.text).html_safe %>
           </blockquote><!--//quote-->
         </div><!--//quote-box-->
         <div class="people row">
-          <%= image_tag "people/people-1.png", class: "img-rounded user-pic col-md-5 col-sm-5 col-xs-12 col-md-offset-1 col-sm-offset-1" %>
+          <%= image_tag "http://#{mention.user.profile_image_url.host + mention.user.profile_image_url.request_uri}".gsub("_normal","_bigger"),
+                        class: "img-rounded user-pic col-md-5 col-sm-5 col-xs-12 col-md-offset-1 col-sm-offset-1" %>
           <p class="details text-center pull-left">
-            <span class="name">Christine Heal</span>
-            <span class="title">Bristol, UK</span>
+            <span class="name"><%= mention.user.name %></span>
+            <span class="title"><%= "@#{mention.user.screen_name}" %></span>
           </p>
         </div><!--//people-->
       </div><!--//item-->
-      <div class="item col-md-4 col-sm-4">
-        <div class="quote-box">
-          <i class="fa fa-quote-left"></i>
-          <blockquote class="quote">
-            <a href="index.html#">@customerbora</a> consectetur adipiscing elit. #DeltaApp Sed bibendum velit quis nunc laoreet dictum id nisl id lacinia.
-          </blockquote><!--//quote-->
-        </div><!--//quote-box-->
-        <div class="people row">
-          <%= image_tag "people/people-2.png", class: "img-rounded user-pic col-md-5 col-sm-5 col-xs-12 col-md-offset-1 col-sm-offset-1" %>
-          <p class="details text-center pull-left">
-            <span class="name">Ben Rousseau</span>
-            <span class="title">Paris, France</span>
-          </p>
-        </div><!--//people-->
-      </div><!--//item-->
-      <div class="item col-md-4 col-sm-4">
-        <div class="quote-box">
-          <i class="fa fa-quote-left"></i>
-          <blockquote class="quote">
-            I find DeltaApp very useful - Lorem ipsum dolor sit amet, check it out: <a href="index.html#">http://bit.ly/1gB9UBR</a>
-          </blockquote><!--//quote-->
-        </div><!--//quote-box-->
-        <div class="people row">
-          <%= image_tag "people/people-3.png", class: "img-rounded user-pic col-md-5 col-sm-5 col-xs-12 col-md-offset-1 col-sm-offset-1" %>
-          <p class="details text-center pull-left">
-            <span class="name">Mike Chan</span>
-            <span class="title">Hongkong, China</span>
-          </p>
-        </div><!--//people-->
-      </div><!--//item-->
+      <% end %>
     </div><!--//row-->
 
     <div class="press row text-center">

@@ -9,19 +9,18 @@ class PushMessagesController < ApplicationController
     push_msg = PushMessage.create!(push_messages_params)
     contents =  push_msg.message.split('#')
     if contents.size > 1 and contents.size <= 2
-      if contents.first.downcase == "register"
-        user_from_sms(contents.last.titleize, push_msg.from)
-      elsif contents.first.downcase == "location"
-        location_from_sms(contents.last.titleize, push_msg.from)
+      if contents.first.downcase.strip == "register"
+        user_from_sms(contents.last.titleize, push_msg.from, push_msg.aftk_linkid)
+      elsif contents.first.downcase.strip == "location"
+        location_from_sms(contents.last.titleize, push_msg.from, push_msg.aftk_linkid)
       else
-        product_from_sms(contents.first, contents.last, push_msg.from)
+        product_from_sms(contents.first, contents.last, push_msg.from, push_msg.aftk_linkid)
       end
     else
-      #  send unprocessed sms
+      # send unprocessed sms
       message = "There was an error processing your message. Please try again\r\nTo register: send register#YOUR NAME to #{ENV['SHORT_CODE']}\r\nTo submit: send productName#productSerialNo to #{ENV['SHORT_CODE']}"
+      $smsGateway.send_message(push_msg.from, message, ENV['SHORT_CODE'], push_msg.aftk_linkid)
       push_msg.destroy
-
-      $smsGateway.send_message(push_msg.from, message, ENV['SHORT_CODE'])
     end
 
     render text: "success"
@@ -29,7 +28,7 @@ class PushMessagesController < ApplicationController
 
   private
 
-  def user_from_sms(name, phone)
+  def user_from_sms(name, phone, link_id)
     password = (0...7).map { ('a'..'z').to_a[rand(26)] }.join
 
     user = User.new(name: name, phone: phone,
@@ -37,48 +36,48 @@ class PushMessagesController < ApplicationController
                     password: password,password_confirmation: password)
     if user.save
       message = "Hi #{user.name}, your CustomerBora account was successfully created. Your password is #{password}"
-      $smsGateway.send_message(phone, message, ENV['SHORT_CODE'])
+      $smsGateway.send_message(phone, message, ENV['SHORT_CODE'],link_id)
     else
       errors = user.errors.full_messages
       message = "Your account could not be created. Reason: #{errors.join(',')}"
-      $smsGateway.send_message(phone, message, ENV['SHORT_CODE'])
+      $smsGateway.send_message(phone, message, ENV['SHORT_CODE'], link_id)
     end
   end
 
-  def product_from_sms(brand,serial,phone_no)
+  def product_from_sms(brand,serial,phone_no, link_id)
     user = User.find_by phone: phone_no
     if user
       submission = user.submissions.new(:name => brand, :serial_no => serial)
       if submission.save
         message = "Thank you, your submission was successfully recorded.\r\nSubmissions to date: #{user.submissions.count}"
-        $smsGateway.send_message(phone_no, message, ENV['SHORT_CODE'])
+        $smsGateway.send_message(phone_no, message, ENV['SHORT_CODE'], link_id)
       else
         errors = submission.errors.full_messages
         message = "Ooops, there was a problem with your submission. Reason: #{errors.join(',')}"
-        $smsGateway.send_message(phone_no, message, ENV['SHORT_CODE'])
+        $smsGateway.send_message(phone_no, message, ENV['SHORT_CODE'], link_id)
       end
 
     else
       message = "You need to be registered to start submitting production.\r\n\r\nSend register#YOUR NAME to #{ENV['SHORT_CODE']}"
-      $smsGateway.send_message(phone_no, message, ENV['SHORT_CODE'])
+      $smsGateway.send_message(phone_no, message, ENV['SHORT_CODE'], link_id)
     end
 
   end
 
-  def location_from_sms(location, phone_no)
+  def location_from_sms(location, phone_no, link_id)
     user = User.find_by phone: phone_no
     if user
       if user.update_attribute(:location,location)
         message = "Your location was successfully updated to: #{location}"
-        $smsGateway.send_message(phone_no, message, ENV['SHORT_CODE'])
+        $smsGateway.send_message(phone_no, message, ENV['SHORT_CODE'], link_id)
       else
         errors = user.errors.full_messages
         message = "Ooops, there was some errors in your submition. Errors: #{errors.join(',')}"
-        $smsGateway.send_message(phone_no, message, ENV['SHORT_CODE'])
+        $smsGateway.send_message(phone_no, message, ENV['SHORT_CODE'], link_id)
       end
     else
       message = "You need to be registered to set/update your location.\r\n\r\nSend register#YOUR NAME to #{ENV['SHORT_CODE']}"
-      $smsGateway.send_message(phone_no, message, ENV['SHORT_CODE'])
+      $smsGateway.send_message(phone_no, message, ENV['SHORT_CODE'], link_id)
     end
 
   end

@@ -1,4 +1,6 @@
 module ApplicationHelper
+  include Twitter::Autolink
+
   def errors_for(resource)
     if resource.errors.any?
       messages = resource.errors.full_messages.map { |msg| content_tag(:p, msg) }.join
