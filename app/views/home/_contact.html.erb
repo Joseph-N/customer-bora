@@ -3,10 +3,10 @@
     <div class="row text-center">
       <h2 class="title">Contact US</h2>
       <div class="intro col-md-6 col-sm-12 col-xs-12 col-md-offset-3">
-        <p>We’d love to hear from you. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam ut erat magna. Aliquam porta sem a lacus imperdiet posuere. Integer semper eget ligula id eleifend.</p>
+        <p>We’d love to hear from you. Have any enquiries or suggestion? Drop us your message below and we will be in touch</p>
         <ul class="list-unstyled contact-details">
-          <li><i class="fa fa-envelope"></i><a href="mailto:hello@website.com">hello@customerbora.com</a></li>
-          <li><i class="fa fa-phone-square"></i>0800 123 456</li>
+          <li><i class="fa fa-envelope"></i><a href="mailto:<%= ENV["EMAIL"] %>"><%= ENV["EMAIL"] %></a></li>
+          <li><i class="fa fa-phone-square"></i><%= ENV["PHONE"] %></li>
         </ul>
       </div>
     </div><!--//row-->
