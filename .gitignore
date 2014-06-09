@@ -64,6 +64,3 @@ nohup.out
 
 # Ignore application.yml
 config/application.yml
-
-# Ignore data folder
-data/*
