@@ -9,12 +9,15 @@ class AfricasTalkingGateway
     @api_key = api_key
   end
 
-  def send_message(recipients, message, from=nil, link_id)
+  def send_message(recipients, message, from=nil, bulkSMSMode = 1, options = {})
     data = nil
     response_code = nil
 
-    post_body = {:username => @user_name, :message => message, :to => recipients, :from => from, :bulkSMSMode => 0,
-                 :linkId => link_id }
+    post_body = {:username => @user_name, :message => message, :to => recipients, :from => from, :bulkSMSMode => bulkSMSMode }
+
+    if options.any?
+      post_body[:linkId] = options[:linkId]
+    end
 
     http = Curl.post(SMS_URL, post_body) do |curl|
       curl.headers['Accept'] = ACCEPT_TYPE

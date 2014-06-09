@@ -19,7 +19,7 @@ class PushMessagesController < ApplicationController
     else
       # send unprocessed sms
       message = "There was an error processing your message. Please try again\r\nTo register: send register#YOUR NAME to #{ENV['SHORT_CODE']}\r\nTo submit: send productName#productSerialNo to #{ENV['SHORT_CODE']}"
-      $smsGateway.send_message(push_msg.from, message, ENV['SHORT_CODE'], push_msg.aftk_linkid)
+      $smsGateway.send_message(push_msg.from, message, ENV['SHORT_CODE'], 0, {:linkId => push_msg.aftk_linkid} )
       push_msg.destroy
     end
 
@@ -36,11 +36,11 @@ class PushMessagesController < ApplicationController
                     password: password,password_confirmation: password)
     if user.save
       message = "Hi #{user.name}, your CustomerBora account was successfully created. Your password is #{password}"
-      $smsGateway.send_message(phone, message, ENV['SHORT_CODE'],link_id)
+      $smsGateway.send_message(phone, message, ENV['SHORT_CODE'],0, {:linkId => link_id})
     else
       errors = user.errors.full_messages
       message = "Your account could not be created. Reason: #{errors.join(',')}"
-      $smsGateway.send_message(phone, message, ENV['SHORT_CODE'], link_id)
+      $smsGateway.send_message(phone, message, ENV['SHORT_CODE'],0, {:linkId => link_id})
     end
   end
 
@@ -50,16 +50,16 @@ class PushMessagesController < ApplicationController
       submission = user.submissions.new(:name => brand, :serial_no => serial)
       if submission.save
         message = "Thank you, your submission was successfully recorded.\r\nSubmissions to date: #{user.submissions.count}"
-        $smsGateway.send_message(phone_no, message, ENV['SHORT_CODE'], link_id)
+        $smsGateway.send_message(phone_no, message, ENV['SHORT_CODE'],0, {:linkId => link_id})
       else
         errors = submission.errors.full_messages
         message = "Ooops, there was a problem with your submission. Reason: #{errors.join(',')}"
-        $smsGateway.send_message(phone_no, message, ENV['SHORT_CODE'], link_id)
+        $smsGateway.send_message(phone_no, message, ENV['SHORT_CODE'],0, {:linkId => link_id})
       end
 
     else
       message = "You need to be registered to start submitting production.\r\n\r\nSend register#YOUR NAME to #{ENV['SHORT_CODE']}"
-      $smsGateway.send_message(phone_no, message, ENV['SHORT_CODE'], link_id)
+      $smsGateway.send_message(phone_no, message, ENV['SHORT_CODE'],0, {:linkId => link_id})
     end
 
   end
@@ -69,15 +69,15 @@ class PushMessagesController < ApplicationController
     if user
       if user.update_attribute(:location,location)
         message = "Your location was successfully updated to: #{location}"
-        $smsGateway.send_message(phone_no, message, ENV['SHORT_CODE'], link_id)
+        $smsGateway.send_message(phone_no, message, ENV['SHORT_CODE'],0, {:linkId => link_id})
       else
         errors = user.errors.full_messages
         message = "Ooops, there was some errors in your submition. Errors: #{errors.join(',')}"
-        $smsGateway.send_message(phone_no, message, ENV['SHORT_CODE'], link_id)
+        $smsGateway.send_message(phone_no, message, ENV['SHORT_CODE'],0, {:linkId => link_id})
       end
     else
       message = "You need to be registered to set/update your location.\r\n\r\nSend register#YOUR NAME to #{ENV['SHORT_CODE']}"
-      $smsGateway.send_message(phone_no, message, ENV['SHORT_CODE'], link_id)
+      $smsGateway.send_message(phone_no, message, ENV['SHORT_CODE'],0, {:linkId => link_id})
     end
 
   end
