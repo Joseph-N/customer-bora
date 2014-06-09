@@ -16,7 +16,7 @@ namespace :customers do
       if user.save
         message = "Hello customerbora, login to your online a/c with password: #{password}.Provide your location for collection purposes by replying to this sms with LOCATION#YOURAREA"
         p "saved #{user.name}"
-        # $smsGateway.send_message(user.phone, message, ENV['SHORT_CODE'])
+        $smsGateway.send_message(user.phone, message, ENV['SHORT_CODE'])
       else
         p "User could not be created due to: #{user.errors.full_messages.join(',')}"
       end
