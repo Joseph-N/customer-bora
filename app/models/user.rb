@@ -6,7 +6,8 @@ class User < ActiveRecord::Base
 
   # validates_presence_of :name, :birthday, :location, :phone
   # validates_presence_of :phone
-  validates_uniqueness_of :phone
+  validates :phone, uniqueness: true, presence: true, format: { with: /\A([0-9\(\)\/\+ \-]*)\z/,  message: "Invalid phone number" }
 
   has_many :submissions
 end
+
