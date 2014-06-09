@@ -18,9 +18,9 @@ class PushMessagesController < ApplicationController
       end
     else
       # send unprocessed sms
-      message = "There was an error processing your message. Please try again\r\nTo register: send register#YOUR NAME to #{ENV['SHORT_CODE']}\r\nTo submit: send productName#productSerialNo to #{ENV['SHORT_CODE']}"
+      message = I18n.t('sms.failure.unprocessable_message', short_code: ENV['SHORT_CODE'])
       $smsGateway.send_message(push_msg.from, message, ENV['SHORT_CODE'], 0, {:linkId => push_msg.aftk_linkid} )
-      push_msg.destroy
+      # push_msg.destroy
     end
 
     render text: "success"
@@ -29,17 +29,16 @@ class PushMessagesController < ApplicationController
   private
 
   def user_from_sms(name, phone, link_id)
-    password = (0...7).map { ('a'..'z').to_a[rand(26)] }.join
+    password = (0..5).map { ('a'..'z').to_a[rand(26)] }.join
 
     user = User.new(name: name, phone: phone,
                     email: "cust-bora-#{(0...5).map { ('a'..'z').to_a[rand(26)] }.join}@gmail.com",
                     password: password,password_confirmation: password)
     if user.save
-      message = "Hi #{user.name}, your CustomerBora account was successfully created. Your password is #{password}"
+      message = I18n.t('sms.registration.success', user: user.name, password: password)
       $smsGateway.send_message(phone, message, ENV['SHORT_CODE'],0, {:linkId => link_id})
     else
-      errors = user.errors.full_messages
-      message = "Your account could not be created. Reason: #{errors.join(',')}"
+      message = I18n.t('sms.registration.failure', errors: user.errors.full_messages.join(','))
       $smsGateway.send_message(phone, message, ENV['SHORT_CODE'],0, {:linkId => link_id})
     end
   end
@@ -49,16 +48,15 @@ class PushMessagesController < ApplicationController
     if user
       submission = user.submissions.new(:name => brand, :serial_no => serial)
       if submission.save
-        message = "Thank you, your submission was successfully recorded.\r\nSubmissions to date: #{user.submissions.count}"
+        message = I18n.t('sms.submission.success', count: user.submissions.count * 5)
         $smsGateway.send_message(phone_no, message, ENV['SHORT_CODE'],0, {:linkId => link_id})
       else
-        errors = submission.errors.full_messages
-        message = "Ooops, there was a problem with your submission. Reason: #{errors.join(',')}"
+        message = I18n.t('sms.submission.failure', errors: submission.errors.full_messages.join(','))
         $smsGateway.send_message(phone_no, message, ENV['SHORT_CODE'],0, {:linkId => link_id})
       end
 
     else
-      message = "You need to be registered to start submitting production.\r\n\r\nSend register#YOUR NAME to #{ENV['SHORT_CODE']}"
+      message = I18n.t('sms.submission.unregistered', short_code: ENV['SHORT_CODE'])
       $smsGateway.send_message(phone_no, message, ENV['SHORT_CODE'],0, {:linkId => link_id})
     end
 
@@ -68,15 +66,14 @@ class PushMessagesController < ApplicationController
     user = User.find_by phone: phone_no
     if user
       if user.update_attribute(:location,location)
-        message = "Your location was successfully updated to: #{location}"
+        message = I18n.t('sms.location.success', location: location)
         $smsGateway.send_message(phone_no, message, ENV['SHORT_CODE'],0, {:linkId => link_id})
       else
-        errors = user.errors.full_messages
-        message = "Ooops, there was some errors in your submition. Errors: #{errors.join(',')}"
+        message = I18n.t('sms.location.failure', errors: user.errors.full_messages.join(','))
         $smsGateway.send_message(phone_no, message, ENV['SHORT_CODE'],0, {:linkId => link_id})
       end
     else
-      message = "You need to be registered to set/update your location.\r\n\r\nSend register#YOUR NAME to #{ENV['SHORT_CODE']}"
+      message =  I18n.t('sms.location.unregistered', short_code: ENV['SHORT_CODE'])
       $smsGateway.send_message(phone_no, message, ENV['SHORT_CODE'],0, {:linkId => link_id})
     end
 

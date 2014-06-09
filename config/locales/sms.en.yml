@@ -1,0 +1,15 @@
+en:
+  sms:
+    failure:
+      unprocessable_message: "Sorry, We did not understand your message. To register: send register#YOUR NAME to %{short_code}. For submissions: send productName#productSerialNo to %{short_code}"
+    registration:
+      success: "Hi %{user}, your CustomerBora account was successfully created. Your password is %{password}"
+      failure: "Your account could not be created. Reason: %{errors}"
+    submission:
+      success: "Thank you, your submission was successfully recorded. You've gained 5 points and a total of %{count} points"
+      failure: "Sorry, there was a problem with your submission. Reason: %{errors}"
+      unregistered: "You need to be registered to start submitting products. To register send register#YOUR NAME to %{short_code}"
+    location:
+      success: "Your location was successfully updated to: %{location}"
+      failure: "Sorry, we were unable to update your location. Reason: %{errors}"
+      unregistered: "You need to be registered to set/update your location. To register, send register#YOUR NAME to %{short_code}"
