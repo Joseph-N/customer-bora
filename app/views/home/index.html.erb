@@ -109,7 +109,7 @@
 
 
           <div class="faq-col col-md-6 col-sm-6 col-xs-12">
-            <% @faqs.last(@faqs.count - (@count/2)).each do |faq| %>
+            <% @faqs.last(@faqs.count - (@faqs.count/2)).each do |faq| %>
                 <div class="item">
                   <h3 class="question"><i class="fa fa-question-circle"></i><%= faq.question %></h3>
                   <p class="answer"> <%= faq.answer %></p>
