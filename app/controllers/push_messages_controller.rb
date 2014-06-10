@@ -9,15 +9,15 @@ class PushMessagesController < ApplicationController
 
     push_msg = PushMessage.create!(push_messages_params)
 
-    contents =  push_msg.message.split('#')
     multiple_submissions = push_msg.message.split(',')
-
-    validate_message(contents, push_msg)
 
     if multiple_submissions.size >= 2
       multiple_submissions.each do |submission|
         validate_message(submission.split('#'), push_msg)
       end
+    else
+      contents =  push_msg.message.split('#')
+      validate_message(contents, push_msg)
     end
 
     render text: "success"
@@ -76,7 +76,6 @@ class PushMessagesController < ApplicationController
         message = I18n.t('sms.submission.failure', errors: submission.errors.full_messages.join(','))
         $smsGateway.send_message(phone_no, message, ENV['SHORT_CODE'],0, {:linkId => link_id})
       end
-
     else
       message = I18n.t('sms.submission.unregistered', short_code: ENV['SHORT_CODE'])
       $smsGateway.send_message(phone_no, message, ENV['SHORT_CODE'],0, {:linkId => link_id})
