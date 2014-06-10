@@ -35,7 +35,7 @@ class PushMessagesController < ApplicationController
       # send unprocessed sms
       message = I18n.t('sms.failure.unprocessable_message', short_code: ENV['SHORT_CODE'])
       $smsGateway.send_message(push_msg.from, message, ENV['SHORT_CODE'], 0, {:linkId => push_msg.aftk_linkid})
-      # push_msg.destroy
+      push_msg.destroy
     end
   end
 
