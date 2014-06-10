@@ -13,3 +13,6 @@ en:
       success: "Your location was successfully updated to: %{location}"
       failure: "Sorry, we were unable to update your location. Reason: %{errors}"
       unregistered: "You need to be registered to set/update your location. To register, send register#YOUR NAME to %{short_code}"
+    unsuscribe:
+      success: "You were successfully unsuscribed from customer bora"
+      failure: "Sorry, we did not match your number with our list of users. Most probably you are not a registered customerbora"

@@ -9,5 +9,9 @@ class User < ActiveRecord::Base
   validates :phone, uniqueness: true, presence: true, format: { with: /\A([0-9\(\)\/\+ \-]*)\z/,  message: "Invalid phone number" }
 
   has_many :submissions
+
+  def unsuscribe
+    self.update_attribute(:suscribed, false)
+  end
 end
 
