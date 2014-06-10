@@ -15,7 +15,9 @@
           <table class="table">
             <thead>
             <tr>
-              <th colspan="2"><i class="fa fa-user"></i> &nbsp;&nbsp;Profile Details <i class="fa fa-pencil pull-right"></i> </th>
+              <th colspan="2"><i class="fa fa-user"></i> Profile Details
+                <%= link_to '<i class="fa fa-pencil"></i> Edit'.html_safe, edit_user_registration_path, class: "pull-right" %>
+              </th>
 
             </tr>
             </thead>
