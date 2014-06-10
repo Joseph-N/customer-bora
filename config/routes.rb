@@ -7,6 +7,7 @@ CustomerBora::Application.routes.draw do
 
   resources :users
   resources :push_messages, only: [:create]
+  resources :leaderboard
 
   post 'contact', to: 'home#contact', as: :contact
 end

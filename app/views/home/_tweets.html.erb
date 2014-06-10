@@ -1,0 +1,16 @@
+<div class="item col-md-4 col-sm-4">
+  <div class="quote-box">
+    <i class="fa fa-quote-left"></i>
+    <blockquote class="quote">
+      <%= auto_link(mention.text).html_safe %>
+    </blockquote><!--//quote-->
+  </div><!--//quote-box-->
+  <div class="people row">
+    <%= image_tag "http://#{mention.user.profile_image_url.host + mention.user.profile_image_url.request_uri}".gsub("_normal","_bigger"),
+                  class: "img-rounded user-pic col-md-5 col-sm-5 col-xs-12 col-md-offset-1 col-sm-offset-1" %>
+    <p class="details text-center pull-left">
+      <span class="name"><%= mention.user.name %></span>
+      <span class="title"><%= "@#{mention.user.screen_name}" %></span>
+    </p>
+  </div><!--//people-->
+</div><!--//item-->

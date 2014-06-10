@@ -1,0 +1,43 @@
+<!-- ******leaderboard****** -->
+<section id="promo" class="section offset-header has-pattern">
+  <div class="container">
+    <div class="row text-center">
+      <div class="col-md-4 col-sm-4 top-30">
+        <i class="fa fa-trophy fa-5x"></i>
+      </div>
+      <div class="col-md-4 col-sm-4">
+        <%= image_tag "leaderboard/gold-trophe.png", class: "img-responsive" %>
+      </div>
+      <div class="col-md-4 col-sm-4 top-30">
+        <i class="fa fa-trophy fa-5x"></i>
+      </div>
+
+    </div>
+
+    <div class="row top-30">
+      <div class="col-md-12">
+        <table class="table table-bordered">
+          <thead>
+          <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Location</th>
+            <th>Points</th>
+          </tr>
+          </thead>
+          <tbody>
+           <% @users.each_with_index do |user,index| %>
+              <tr>
+                <td><%= index += 1 %></td>
+                <td><%= user.name %></td>
+                <td><%= user.location ? user.location : "-" %></td>
+                <td><%= user.submissions.count * 5 %></td>
+              </tr>
+           <% end %>
+
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>

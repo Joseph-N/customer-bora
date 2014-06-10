@@ -99,7 +99,7 @@
       <h2 class="title text-center">Frequently Asked Questions</h2>
       <% if @faqs.any? %>
           <div class="faq-col col-md-6 col-sm-6 col-xs-12">
-            <% @faqs.first(@count/2).each do |faq| %>
+            <% @faqs.first(@faqs.count/2).each do |faq| %>
                 <div class="item">
                   <h3 class="question"><i class="fa fa-question-circle"></i><%= faq.question %></h3>
                   <p class="answer"> <%= faq.answer %></p>
@@ -109,7 +109,7 @@
 
 
           <div class="faq-col col-md-6 col-sm-6 col-xs-12">
-            <% @faqs.last(@count - (@count/2)).each do |faq| %>
+            <% @faqs.last(@faqs.count - (@count/2)).each do |faq| %>
                 <div class="item">
                   <h3 class="question"><i class="fa fa-question-circle"></i><%= faq.question %></h3>
                   <p class="answer"> <%= faq.answer %></p>
@@ -134,40 +134,14 @@
 
 
 
-<!-- ******TESTIMONIALS****** -->
+<!-- ******Tweets****** -->
 <section id="testimonials" class="testimonials section">
   <div class="container">
     <div class="row">
-      <h2 class="title text-center">What are people saying?</h2>
-      <% $TweetBot.mentions.take(3).each do |mention| %>
-      <div class="item col-md-4 col-sm-4">
-        <div class="quote-box">
-          <i class="fa fa-quote-left"></i>
-          <blockquote class="quote">
-            <%= auto_link(mention.text).html_safe %>
-          </blockquote><!--//quote-->
-        </div><!--//quote-box-->
-        <div class="people row">
-          <%= image_tag "http://#{mention.user.profile_image_url.host + mention.user.profile_image_url.request_uri}".gsub("_normal","_bigger"),
-                        class: "img-rounded user-pic col-md-5 col-sm-5 col-xs-12 col-md-offset-1 col-sm-offset-1" %>
-          <p class="details text-center pull-left">
-            <span class="name"><%= mention.user.name %></span>
-            <span class="title"><%= "@#{mention.user.screen_name}" %></span>
-          </p>
-        </div><!--//people-->
-      </div><!--//item-->
+      <h2 class="title text-center"> <i class="fa fa-twitter"></i> CustomerBora on Twitter!</h2>
+      <% @tweets.each do |mention| %>
+        <%= render partial: 'tweets', locals: { mention: mention} %>
       <% end %>
-    </div><!--//row-->
-
-    <div class="press row text-center">
-      <h3 class="note">Popular Products</h3>
-      <ul class="col-md-12 list-inline">
-        <li><%= link_to image_tag("press/press-1.png", class: "img-responsive"), '#' %></li>
-        <li><%= link_to image_tag("press/press-2.png", class: "img-responsive"), '#' %></li>
-        <li><%= link_to image_tag("press/press-3.png", class: "img-responsive"), '#' %></li>
-        <li><%= link_to image_tag("press/press-4.png", class: "img-responsive"), '#' %></li>
-        <li class="last"><%= link_to image_tag("press/press-5.png", class: "img-responsive"), '#' %></li>
-      </ul>
     </div><!--//row-->
   </div><!--//container-->
 </section><!--//Testimonials-->

@@ -68,19 +68,23 @@ class PushMessagesController < ApplicationController
   def product_from_sms(brand,serial,phone_no, link_id)
     user = User.find_by phone: phone_no
     if user
-      submission = user.submissions.new(:name => brand, :serial_no => serial)
-      if submission.save
-        message = I18n.t('sms.submission.success', count: user.submissions.count * 5)
-        $smsGateway.send_message(phone_no, message, ENV['SHORT_CODE'],0, {:linkId => link_id})
+      unless serial.to_i.eql?(0)
+        submission = user.submissions.new(:name => brand, :serial_no => serial.to_i)
+        if submission.save
+          message = I18n.t('sms.submission.success', count: user.submissions.count * 5)
+          $smsGateway.send_message(phone_no, message, ENV['SHORT_CODE'],0, {:linkId => link_id})
+        else
+          message = I18n.t('sms.submission.failure', errors: submission.errors.full_messages.join(','))
+          $smsGateway.send_message(phone_no, message, ENV['SHORT_CODE'],0, {:linkId => link_id})
+        end
       else
-        message = I18n.t('sms.submission.failure', errors: submission.errors.full_messages.join(','))
+        message =  I18n.t('sms.submission.serial_not_int', short_code:  ENV['SHORT_CODE'])
         $smsGateway.send_message(phone_no, message, ENV['SHORT_CODE'],0, {:linkId => link_id})
       end
     else
       message = I18n.t('sms.submission.unregistered', short_code: ENV['SHORT_CODE'])
       $smsGateway.send_message(phone_no, message, ENV['SHORT_CODE'],0, {:linkId => link_id})
     end
-
   end
 
   def location_from_sms(location, phone_no, link_id)

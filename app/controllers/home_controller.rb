@@ -1,7 +1,7 @@
 class HomeController < ApplicationController
   def index
     @faqs = Faq.all
-    @count = @faqs.count
+    @tweets = $TweetBot.mentions.take(3)
   end
 
   def contact
