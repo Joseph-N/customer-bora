@@ -70,11 +70,12 @@ ActiveRecord::Schema.define(version: 20140611135944) do
     t.string   "phone"
     t.boolean  "admin",                  default: false
     t.boolean  "suscribed",              default: true
-    t.integer  "submissions_count"
+    t.integer  "submissions_count",      default: 0
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
   add_index "users", ["phone"], name: "index_users_on_phone", unique: true, using: :btree
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
+  add_index "users", ["submissions_count"], name: "index_users_on_submissions_count", using: :btree
 
 end
