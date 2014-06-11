@@ -1,5 +1,5 @@
 class LeaderboardController < ApplicationController
   def index
-    @users = User.includes(:submissions).sample(10)
+    @users = User.order('submissions_count DESC').limit(20)
   end
 end

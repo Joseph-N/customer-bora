@@ -3,14 +3,11 @@
   <div class="container">
     <div class="row">
       <div class="overview col-md-8 col-sm-12 col-xs-12">
-        <h2 class="title">Karibu Customer Bora</h2>
-        <ul class="summary">
-          <li>Register for a customer bora account</li>
-          <li>Verify your account using the confirmation code sent</li>
-          <li>Start submiting product serial numbers</li>
-          <li>After buying products, keep the packaging for collection after use</li>
-          <li>Customer bora will then collect the trash afterwards</li>
-        </ul>
+        <h2 class="title">What is CustomerBora?</h2>
+        <p style="font-size: 20px;font-weight: 300; margin-bottom: 50px;">
+          CustomerBora is an SMS platform that uses the serial number on a products packaging to aggregate, recognize a
+          customer for being loyal, responsible and consistent consumer of a specific brand over a period of time."
+        </p>
         <div class="download-area">
           <% if user_signed_in? %>
               <%= link_to raw('<i class="fa fa-lg fa-user"></i> My Profile'),  user_path(current_user),

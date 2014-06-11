@@ -23,10 +23,11 @@
                         "data-toggle" => "dropdown" %>
             <ul class="dropdown-menu" role="menu" aria-labelledby="drop3">
               <li role="presentation">
-                <%= link_to "My Profile",user_path(current_user), "tabindex" => "-1", "role" => "menuitem" %>
+                <%= link_to raw('<i class="fa fa-user"></i> My Profile'),user_path(current_user), "tabindex" => "-1", "role" => "menuitem" %>
               </li>
               <li role="presentation">
-                <%= link_to "Edit Profile",edit_user_registration_path, "tabindex" => "-1", "role" => "menuitem" %>
+                <%= link_to raw('<i class="fa fa-pencil"></i> Edit Profile'),edit_user_registration_path, "tabindex" => "-1", "role" => "menuitem" %>
+              <li role="presentation"><%= link_to raw('<i class="fa fa-trophy"></i> Leaderboard'), leaderboard_index_path %></li>
               <li role="presentation" class="divider"></li>
               <li role="presentation">
                 <%= link_to "Logout", destroy_user_session_path, method: :delete, "tabindex" => "-1", "role" => "menuitem" %>
@@ -35,11 +36,19 @@
           </li>
 
       <% else %>
-          <li class="active nav-item sr-only"><a class="scrollto" href="#promo">Home</a></li>
-          <li class="nav-item"><a class="scrollto" href="#features">How it works</a></li>
-          <li class="nav-item"><a class="scrollto" href="#why">Why</a></li>
-          <li class="nav-item"><a class="scrollto" href="#faq">FAQ</a></li>
-          <li class="nav-item last"><a class="scrollto" href="#contact">Contact</a></li>
+          <% if controller_name == 'home' %>
+              <li class="active nav-item sr-only"><a class="scrollto" href="#promo">Home</a></li>
+              <li class="nav-item"><a class="scrollto" href="#features">How it works</a></li>
+              <li class="nav-item"><a class="scrollto" href="#why">Why</a></li>
+              <li class="nav-item"><a class="scrollto" href="#faq">FAQ</a></li>
+              <li class="nav-item"><a class="scrollto" href="#contact">Contacts</a></li>
+              <li class="nav-item"><%= link_to "Leaderboard", leaderboard_index_path %></li>
+          <% else %>
+              <li class="nav-item">
+                <%= link_to raw('<i class="fa fa-plus-square"></i> Sign Up'),  new_user_registration_path %></li>
+              <li class="nav-item"> <%= link_to raw('<i class="fa fa-sign-in"></i> Log In'), new_user_session_path  %></li>
+              <li class="nav-item"><%= link_to raw('<i class="fa fa-trophy"></i> Leaderboard'), leaderboard_index_path %></li></li>
+          <% end %>
       <% end %>
 
 

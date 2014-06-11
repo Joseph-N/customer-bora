@@ -4,6 +4,4 @@ class Submission < ActiveRecord::Base
 
   validates_presence_of :name, :serial_no
   validates_uniqueness_of :serial_no
-
-  scope :groupped, -> { group(:user_id,:id) }
 end
