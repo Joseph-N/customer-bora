@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  before_filter :correct_user unless :is_admin?
+  before_filter :correct_user unless :admin_signed_in?
 
   def show
     @user  = User.find(params[:id])

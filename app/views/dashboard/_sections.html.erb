@@ -1,0 +1,86 @@
+<!-- User Tab -->
+<div class="col-md-4">
+  <div class="panel panel-success">
+    <div class="panel-heading">
+      <div class="row">
+        <div class="col-xs-4">
+          <i class="fa fa-users fa-5x"></i>
+        </div>
+        <div class="col-xs-8 text-right">
+          <p class="announcement-heading"><%= @user_count %></p>
+          <p class="announcement-text">Total Users!</p>
+        </div>
+      </div>
+    </div>
+    <a href="/admin/user">
+      <div class="panel-footer announcement-bottom">
+        <div class="row">
+          <div class="col-xs-6">
+            All users
+          </div>
+          <div class="col-xs-6 text-right">
+            <i class="fa fa-arrow-circle-right"></i>
+          </div>
+        </div>
+      </div>
+    </a>
+  </div>
+</div>
+
+<!-- Submissions -->
+<div class="col-md-4">
+  <div class="panel panel-info">
+    <div class="panel-heading">
+      <div class="row">
+        <div class="col-xs-6">
+          <i class="fa fa-trash-o fa-5x"></i>
+        </div>
+        <div class="col-xs-6 text-right">
+          <p class="announcement-heading"><%= @submission_count %></p>
+          <p class="announcement-text">Total Submissions!</p>
+        </div>
+      </div>
+    </div>
+    <a href="/admin/submission">
+      <div class="panel-footer announcement-bottom">
+        <div class="row">
+          <div class="col-xs-8">
+            All Submissions
+          </div>
+          <div class="col-xs-4 text-right">
+            <i class="fa fa-arrow-circle-right"></i>
+          </div>
+        </div>
+      </div>
+    </a>
+  </div>
+</div>
+
+<!-- faq -->
+<div class="col-md-4">
+  <div class="panel panel-warning">
+    <div class="panel-heading">
+      <div class="row">
+        <div class="col-xs-6">
+          <i class="fa fa-comments-o fa-5x"></i>
+        </div>
+        <div class="col-xs-6 text-right">
+          <p class="announcement-heading"><%= @faq_count %></p>
+          <p class="announcement-text">FAQs!</p>
+        </div>
+      </div>
+    </div>
+    <a href="/admin/faq">
+      <div class="panel-footer announcement-bottom">
+        <div class="row">
+          <div class="col-xs-6">
+            All FAQs
+          </div>
+          <div class="col-xs-6 text-right">
+            <i class="fa fa-arrow-circle-right"></i>
+          </div>
+        </div>
+      </div>
+    </a>
+  </div>
+</div>

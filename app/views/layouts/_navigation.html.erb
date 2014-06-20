@@ -11,12 +11,14 @@
     <ul class="nav navbar-nav">
       <% if user_signed_in?  %>
           <% if controller_name == 'home' %>
-              <li class="active nav-item sr-only"><a class="scrollto" href="#promo">Home</a></li>
+              <li class="nav-item sr-only"><a class="scrollto" href="#promo">Home</a></li>
               <li class="nav-item"><a class="scrollto" href="#features">How it works</a></li>
               <li class="nav-item"><a class="scrollto" href="#why">Why</a></li>
               <li class="nav-item"><a class="scrollto" href="#faq">FAQ</a></li>
               <li class="nav-item"><a class="scrollto" href="#contact">Contact</a></li>
-          <% end %>
+              <li class="nav-item"><%= link_to raw('<i class="fa fa-trophy"></i> Leaderboard'), leaderboard_index_path %></li>
+
+    <% end %>
 
           <li class="dropdown">
             <%= link_to raw("Hi #{current_user.name.split(" ").first} <b class='caret'></b>"), '#', class: "dropdown-toggle",
@@ -27,10 +29,16 @@
               </li>
               <li role="presentation">
                 <%= link_to raw('<i class="fa fa-pencil"></i> Edit Profile'),edit_user_registration_path, "tabindex" => "-1", "role" => "menuitem" %>
-              <li role="presentation"><%= link_to raw('<i class="fa fa-trophy"></i> Leaderboard'), leaderboard_index_path %></li>
+                <%= link_to raw('<i class="fa fa-trophy"></i> Leaderboard'), leaderboard_index_path, "tabindex" => "-1", "role" => "menuitem" %>
+                <% if admin_signed_in? %>
+                    <%= link_to raw('<i class="fa fa-cogs"></i> Admin'), rails_admin_path, "tabindex" => "-1", "role" => "menuitem"  %>
+                    <%= link_to raw('<i class="fa fa-dashboard"></i> Dashboard'), dashboard_index_path, "tabindex" => "-1", "role" => "menuitem"  %>
+
+              <% end %>
+
               <li role="presentation" class="divider"></li>
               <li role="presentation">
-                <%= link_to "Logout", destroy_user_session_path, method: :delete, "tabindex" => "-1", "role" => "menuitem" %>
+                <%= link_to raw('<i class="fa fa-sign-out"></i> Logout'), destroy_user_session_path, method: :delete, "tabindex" => "-1", "role" => "menuitem" %>
               </li>
             </ul>
           </li>
