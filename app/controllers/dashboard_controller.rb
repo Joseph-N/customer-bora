@@ -12,13 +12,16 @@ class DashboardController < ApplicationController
   def sms
     if params[:all_users]
       recipients = User.all.map(&:phone).join(",")
-      logger.debug recipients
 
       $smsGateway.send_message(recipients, params[:message], ENV['SHORT_CODE'])
       redirect_to dashboard_index_path, notice: "Successfully sent messages to #{recipients.split(',').size} users"
     elsif params[:only_location]
       recipients = User.where.not(:location => nil).map(&:phone).join(",")
-      logger.debug recipients
+
+      $smsGateway.send_message(recipients, params[:message], ENV['SHORT_CODE'])
+      redirect_to dashboard_index_path, notice: "Successfully sent messages to #{recipients.split(',').size} users"
+    elsif params[:only_submission]
+      recipients = User.where.not(:submissions_count => nil).map(&:phone).join(",")
 
       $smsGateway.send_message(recipients, params[:message], ENV['SHORT_CODE'])
       redirect_to dashboard_index_path, notice: "Successfully sent messages to #{recipients.split(',').size} users"
