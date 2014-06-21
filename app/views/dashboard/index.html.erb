@@ -86,6 +86,46 @@
       </div>
     </div>
 
+    <div class="row">
+      <div class="col-md-12">
+        <!-- recent submissions -->
+        <div class="panel panel-default">
+          <!-- Default panel contents -->
+          <div class="panel-heading">Recent Submissions</div>
+          <div class="panel-body">
+            <p>Below is a list recently submitted products.</p>
+          </div>
+
+          <!-- Table -->
+          <table class="table">
+            <thead>
+            <tr>
+              <th>#</th>
+              <th>Product</th>
+              <th>Serial No</th>
+              <th>Submitted By</th>
+              <th>Date</th>
+            </tr>
+            </thead>
+            <tbody>
+            <% @submissions.each_with_index do |submission, index| %>
+                <tr>
+                  <td><%= index += 1 %></td>
+                  <td><%= submission.name %></td>
+                  <td><%= submission.serial_no %></td>
+                  <td><%= submission.user.name %></td>
+                  <td><%= submission.created_at.strftime("%d %B %Y") %></td>
+                </tr>
+
+            <% end %>
+
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+
     </div>
   </div>
 </section>
