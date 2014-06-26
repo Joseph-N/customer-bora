@@ -2,7 +2,8 @@ class DashboardController < ApplicationController
   before_action :verify_admin
 
   def index
-    @user_count = User.count
+    @suscribed_users = User.suscribed.count
+    @unsuscribed_users = User.count - @suscribed_users
     @submission_count = Submission.count
     @faq_count = Faq.count
 
@@ -12,17 +13,17 @@ class DashboardController < ApplicationController
 
   def sms
     if params[:all_users]
-      recipients = User.all.map(&:phone).join(",")
+      recipients = User.suscribed.map(&:phone).join(",")
 
       $smsGateway.send_message(recipients, params[:message], ENV['SHORT_CODE'])
       redirect_to dashboard_index_path, notice: "Successfully sent messages to #{recipients.split(',').size} users"
     elsif params[:only_location]
-      recipients = User.where.not(:location => nil).map(&:phone).join(",")
+      recipients = User.suscribed.where.not(:location => nil).map(&:phone).join(",")
 
       $smsGateway.send_message(recipients, params[:message], ENV['SHORT_CODE'])
       redirect_to dashboard_index_path, notice: "Successfully sent messages to #{recipients.split(',').size} users"
     elsif params[:only_submission]
-      recipients = User.where.not(:submissions_count => nil).map(&:phone).join(",")
+      recipients = User.suscribed.where.not(:submissions_count => nil).map(&:phone).join(",")
 
       $smsGateway.send_message(recipients, params[:message], ENV['SHORT_CODE'])
       redirect_to dashboard_index_path, notice: "Successfully sent messages to #{recipients.split(',').size} users"

@@ -10,6 +10,8 @@ class User < ActiveRecord::Base
 
   has_many :submissions, dependent: :destroy
 
+  scope :suscribed, -> { where(suscribed: true) }
+
   def unsuscribe
     self.update_attribute(:suscribed, false)
   end
