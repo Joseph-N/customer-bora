@@ -12,7 +12,7 @@ $(document).ready(function(){
         $("#counter").text(i);
     });
 
-    $('input[type="checkbox"]').click(function(){
+    $('input[type="radio"]').click(function(){
         if($(this).is(':checked')){
             $('#token-input-phone_numbers').prop("disabled",true).fadeTo("slow",0.3)
         }
@@ -22,13 +22,13 @@ $(document).ready(function(){
     $('#token-input-phone_numbers').keyup(function(){
         var length = $(this).val().length;
         if(length > 1){
-            $('input[type="checkbox"]').each(function(){
+            $('input[type="radio"]').each(function(){
                 $(this).prop("disabled", true);
                 $(this).parent().fadeTo("slow",0.3)
             })
         }
         if(length == 0){
-            $('input[type="checkbox"]').each(function(){
+            $('input[type="radio"]').each(function(){
                 $(this).prop("disabled", false);
                 $(this).parent().fadeTo("slow",1)
             })
