@@ -30,6 +30,7 @@
 <%= render 'layouts/footer' %>
 
 <!-- Javascript -->
+<%= yield :page_js %>
 <%= javascript_include_tag "application" %>
 <!--[if !IE]>-->
 <%= javascript_include_tag "animations" %>

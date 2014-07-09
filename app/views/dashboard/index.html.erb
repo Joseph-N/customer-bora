@@ -51,29 +51,37 @@
                 <div class="form-group">
                     <%= text_area_tag :message, nil , class: "form-control", rows: 4 %>
                 </div>
-                <div class="col-sm-3">
-                  <div class="checkbox">
-                    <label>
-                      <%= check_box_tag :all_users %> Send to all
-                    </label>
+                <div class="form-group">
+                  <%= label_tag :phone_numbers %>
+                  <%= text_field_tag :phone_numbers, nil, class: "form-control" %>
+                </div>
+                <hr>
+                <div class="row" id="advanced">
+                  <div class="col-sm-3">
+                    <div class="checkbox">
+                      <label>
+                        <%= radio_button_tag :users ,:all_users %> Send to all
+                      </label>
+                    </div>
+                  </div>
+
+                  <div class="col-sm-4">
+                    <div class="checkbox">
+                      <label>
+                        <%= radio_button_tag :users, :only_location %> Only with location
+                      </label>
+                    </div>
+                  </div>
+
+                  <div class="col-sm-5">
+                    <div class="checkbox">
+                      <label>
+                        <%= radio_button_tag :users, :only_submission %> Only with submissions
+                      </label>
+                    </div>
                   </div>
                 </div>
 
-                <div class="col-sm-4">
-                  <div class="checkbox">
-                    <label>
-                      <%= check_box_tag :only_location %> Only with location
-                    </label>
-                  </div>
-                </div>
-
-                <div class="col-sm-5">
-                  <div class="checkbox">
-                    <label>
-                      <%= check_box_tag :only_submission %> Only with submissions
-                    </label>
-                  </div>
-                </div>
 
 
                 <div class="form-group">
@@ -129,3 +137,7 @@
     </div>
   </div>
 </section>
+
+<% content_for :page_js do %>
+  <%= javascript_include_tag "/autocomplete-data/customers" %>
+<% end %>

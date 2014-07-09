@@ -20,6 +20,7 @@
 //= require jquery.placeholder
 //= require jquery.flexslider-min
 //= require jquery.maskedinput
+//= require jquery.tokeninput
 //= require main
 //= require gritter
 //= require_tree .
