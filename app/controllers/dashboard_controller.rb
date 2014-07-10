@@ -44,6 +44,12 @@ class DashboardController < ApplicationController
 
         $smsGateway.send_message(recipients, params[:message], ENV['SHORT_CODE'])
         redirect_to dashboard_index_path, notice: "Successfully sent messages to #{recipients.split(',').size} users"
+      elsif params[:users] == "past_week_submission" && !params[:message].blank?
+        uniq_ids = Submission.where("created_at >= ?",7.days.ago).map(&:user_id).uniq
+        recipients = User.suscribed.where(:id => uniq_ids).map(&:phone).join(",")
+
+        $smsGateway.send_message(recipients, params[:message], ENV['SHORT_CODE'])
+        redirect_to dashboard_index_path, notice: "Successfully sent messages to #{recipients.split(',').size} users"
       else
         redirect_to dashboard_index_path, alert: "Ensure message is not blank"
       end
