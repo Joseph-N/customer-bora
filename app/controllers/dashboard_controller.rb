@@ -7,9 +7,18 @@ class DashboardController < ApplicationController
     @submission_count = Submission.count
     @faq_count = Faq.count
 
-    @users = User.limit(10).order("created_at DESC")
+    @users = User.limit(15).order("created_at DESC")
     @submissions = Submission.limit(10).order("created_at DESC")
     generate_js
+  end
+
+  def custom_sms
+    if params[:custom_numbers].present? && params[:custom_message].present?
+      $smsGateway.send_message(params[:custom_numbers],params[:custom_message], ENV["SHORT_CODE"])
+      redirect_to dashboard_index_path, notice: "Successfully sent messages"
+    else
+      redirect_to dashboard_index_path, alert: "Message or Phone Numbers cannot be blank"
+    end
   end
 
   def sms
@@ -56,6 +65,6 @@ class DashboardController < ApplicationController
     end
 
     file = Rails.root.join("public", "autocomplete-data", "customers.js")
-    File.open(file, 'w') { |f| f.write("data = " + token_data.to_json.to_s) }
+    File.open(file, 'w') { |f| f.write("data = " + token_data.to_json) }
   end
 end

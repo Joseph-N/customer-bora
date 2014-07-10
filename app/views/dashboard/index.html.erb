@@ -4,9 +4,17 @@
 
     <%= render 'sections' %>
 
+
     </div>
 
     <div class="row">
+      <div class="col-md-12">
+        <%= render 'shared/alert' %>
+      </div>
+    </div>
+
+    <div class="row">
+
 
       <div class="col-md-6">
         <!-- recent users -->
@@ -46,7 +54,7 @@
         <div class="panel panel-default">
           <div class="panel-heading">Compose Message <span class="pull-right badge" id="counter"></span> </div>
           <div class="panel-body">
-            <%= render 'shared/alert' %>
+
             <%= form_tag(sms_path, { class: ""}) do %>
                 <div class="form-group">
                     <%= text_area_tag :message, nil , class: "form-control", rows: 4 %>
@@ -88,6 +96,29 @@
                  <%= submit_tag "Send Message", class: "btn btn-primary" %>
                 </div>
             <% end %>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-12">
+            <div class="panel panel-default">
+              <div class="panel-heading">Non-CustomerBora Messages</div>
+              <div class="panel-body">
+                <%= form_tag(custom_sms_path, { class: ""}) do %>
+                    <div class="form-group">
+
+                        <%= label_tag :phone_numbers %>
+                        <%= text_field_tag :custom_numbers, nil, class: "form-control", placeholder: "+254728658741,+254726354156" %>
+                    </div>
+                    <div class="form-group">
+                      <%= text_area_tag :custom_message, nil , class: "form-control", rows: 4 %>
+                    </div>
+                    <%= submit_tag "Send Message", class: "btn btn-primary" %>
+
+                <% end %>
+
+              </div>
+            </div>
           </div>
         </div>
 
@@ -137,7 +168,3 @@
     </div>
   </div>
 </section>
-
-<% content_for :page_js do %>
-  <%= javascript_include_tag "/autocomplete-data/customers" %>
-<% end %>
