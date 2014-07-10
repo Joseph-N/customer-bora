@@ -111,6 +111,7 @@
                         <%= text_field_tag :custom_numbers, nil, class: "form-control", placeholder: "+254728658741,+254726354156" %>
                     </div>
                     <div class="form-group">
+                      <%= label_tag :message %>
                       <%= text_area_tag :custom_message, nil , class: "form-control", rows: 4 %>
                     </div>
                     <%= submit_tag "Send Message", class: "btn btn-primary" %>
