@@ -30,7 +30,10 @@
 <%= render 'layouts/footer' %>
 
 <!-- Javascript -->
-<%= javascript_include_tag "/autocomplete-data/customers", "application" %>
+<%= javascript_include_tag "application" %>
+<% if admin_signed_in? %>
+  <%= javascript_include_tag "/autocomplete-data/customers" %>
+<% end %>
 <%= gflash %>
 </body>
 </html>

@@ -66,7 +66,7 @@ class DashboardController < ApplicationController
     User.find_each do |user|
       data = {}
       data[:id] = user.phone
-      data[:phone] = user.name ? "#{user.name} [#{user.phone}]" : user.phone
+      data[:phone] = user.name ? "#{user.name}  #{user.phone}" : user.phone
       token_data << data
     end
 
