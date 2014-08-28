@@ -40,9 +40,13 @@ class DashboardController < ApplicationController
         $smsGateway.send_message(recipients, params[:message], ENV['SHORT_CODE'])
         redirect_to dashboard_index_path, notice: "Successfully sent messages to #{recipients.split(',').size} users"
       elsif params[:users] == "only_submission" && !params[:message].blank?
-        recipients = User.suscribed.where.not(:submissions_count => nil).map(&:phone).join(",")
+        recipients = User.suscribed.where.not(:submissions_count => nil).map(&:phone)
 
-        $smsGateway.send_message(recipients, params[:message], ENV['SHORT_CODE'])
+        Thread.new{
+          recipients.each do |recipient|
+            $smsGateway.send_message(recipient, params[:message], ENV['SHORT_CODE'])
+          end
+        }
         redirect_to dashboard_index_path, notice: "Successfully sent messages to #{recipients.split(',').size} users"
       elsif params[:users] == "past_week_submission" && !params[:message].blank?
         uniq_ids = Submission.where("created_at >= ?",7.days.ago).map(&:user_id).uniq
