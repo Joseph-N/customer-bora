@@ -3,7 +3,7 @@ en:
     failure:
       unprocessable_message: "Sorry, We did not understand your message. To register: send register#YOUR NAME to %{short_code}. For submissions: send productName#productSerialNo to %{short_code}"
     registration:
-      success: "Hi %{user}, your CustomerBora account was successfully created. Your password is %{password}.For submissions: send productName#productSerialNo to 21994"
+      success: "Hi %{user}, your CustomerBora account was successfully created. Your password is %{password}.For submissions: send productName#productSerialNo to %{short_code}"
       failure: "Your account could not be created. Reason: %{errors}"
     submission:
       success: "Thank you, your submission was successfully recorded. You've gained 5 points and a total of %{count} points"

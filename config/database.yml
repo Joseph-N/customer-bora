@@ -3,7 +3,7 @@ development:
   encoding: unicode
   database: customerbora_development
   pool: 25
-  username: jose
+  username: Jose
   password: "4114"
   template: template0
   host: localhost
@@ -13,7 +13,7 @@ test: &test
   encoding: unicode
   database: customerbora_test
   pool: 25
-  username: jose
+  username: Jose
   password: "4114"
   template: template0
   host: localhost

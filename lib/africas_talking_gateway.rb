@@ -1,116 +1,294 @@
-class AfricasTalkingGateway
+require 'net/http'
+require 'uri'
+require 'json'
 
-  SMS_URL     = 'https://api.africastalking.com/version1/messaging'
-  VOICE_URL   = 'https://voice.africastalking.com/call'
-  ACCEPT_TYPE = 'application/json'
-
-  def initialize(user_name,api_key)
-    @user_name = user_name
-    @api_key = api_key
-  end
-
-  def send_message(recipients, message, from=nil, bulkSMSMode = 1, options = {})
-    data = nil
-    response_code = nil
-
-    post_body = {:username => @user_name, :message => message, :to => recipients, :from => from, :bulkSMSMode => bulkSMSMode }
-
-    if options.any?
-      post_body[:linkId] = options[:linkId]
-    end
-
-    http = Curl.post(SMS_URL, post_body) do |curl|
-      curl.headers['Accept'] = ACCEPT_TYPE
-      curl.headers['apiKey'] = @api_key
-      curl.on_body { |body|
-        data = body
-        body.to_s.length
-      }
-      curl.on_complete { |resp| response_code = resp.response_code }
-    end
-
-    if response_code == 201
-      reports = JSON.parse(data)["SMSMessageData"]["Recipients"].collect { |entry|
-        StatusReport.new entry["number"], entry["status"], entry["cost"]
-      }
-      return reports
-    else
-      raise AfricasTalkingGatewayError, JSON.parse(data)["SMSMessageData"]["Message"]
-    end
-  end
-
-  def call(from, to)
-    data          = nil
-    response_code = nil
-
-    post_body = {:username => @user_name, :from => from, :to => to }
-
-    http = Curl.post(VOICE_URL, post_body) do |curl|
-      curl.headers['Accept'] = ACCEPT_TYPE
-      curl.headers['apiKey'] = @api_key
-
-      curl.on_body { |body|
-        data = body
-        body.to_s.length
-      }
-      curl.on_complete { |resp| response_code = resp.response_code }
-    end
-
-    raise AfricasTalkingGatewayError, JSON.parse(data)["ErrorMessage"] if response_code != 201
-
-  end
-
-  def fetch_messages(last_received_id)
-    data = nil
-    response_code = nil
-
-    http = Curl.get("#{SMS_URL}?username=#{@user_name}&lastReceivedId=#{last_received_id}") do |curl|
-      curl.headers['Accept'] = ACCEPT_TYPE
-      curl.headers['apiKey'] = @api_key
-      curl.on_body { |body|
-        data = body
-        body.to_s.length
-      }
-      curl.on_complete { |resp| response_code = resp.response_code }
-    end
-
-    if response_code == 200
-      messages = JSON.parse(data)["SMSMessageData"]["Messages"].collect { |msg|
-        SMSMessage.new msg["id"], msg["text"], msg["from"] , msg["to"], msg["linkId"], msg["date"]
-      }
-      return messages
-    end
-
-    raise AfricasTalkingGatewayError, JSON.parse(data)["SMSMessageData"]["Message"]
-
-  end
+class AfricasTalkingGatewayException < Exception
 end
 
-
-class AfricasTalkingGatewayError < Exception
-end
-
-class SMSMessage
+class SMSMessages
   attr_accessor :id, :text, :from, :to, :linkId, :date
 
-  def initialize(m_id, m_text, m_from, m_to, m_linkId, m_date)
-    @id = m_id
-    @text = m_text
-    @from = m_from
-    @to = m_to
-    @linkId = m_linkId
-    @date = m_date
+  def initialize(id_, text_, from_, to_, linkId_, date_)
+    @id     = id_
+    @text   = text_
+    @from   = from_
+    @to     = to_
+    @linkId = linkId_
+    @date   = date_
   end
 end
 
 class StatusReport
-  attr_accessor :number, :status, :cost
+  attr_accessor :number, :status, :cost, :messageId
 
-  def initialize(m_number, m_status, m_cost)
-    @number = m_number
-    @status = m_status
-    @cost = m_cost
+  def initialize(number_, status_, cost_,messageId_)
+    @number = number_
+    @status = status_
+    @cost   = cost_
+    @messageId = messageId_
   end
 end
 
+class PremiumSubscriptionNumbers
+  attr_accessor :phoneNumber, :id
 
+  def initialize(number_, id_)
+    @phoneNumber = number_
+    @id     = id_
+  end
+end
+
+class AirtimeResult
+  attr_accessor :amount, :phoneNumber, :requestId, :status, :errorMessage, :discount
+
+  def initialize(status_, number_, amount_, requestId_, errorMessage_, discount_)
+    @status       = status_
+    @phoneNumber  = number_
+    @amount       = amount_
+    @requestId    = requestId_
+    @errorMessage = errorMessage_
+    @discount     = discount_
+  end
+end
+
+class AfricasTalkingGateway
+
+  SMS_URL          = 'https://api.africastalking.com/version1/messaging'
+  VOICE_URL        = 'https://voice.africastalking.com'
+  SUBSCRIPTION_URL = 'https://api.africastalking.com/version1/subscription'
+  USERDATA_URL     = 'https://api.africastalking.com/version1/user'
+  AIRTIME_URL      = 'https://api.africastalking.com/version1/airtime'
+
+  HTTP_CREATED     = 201
+  HTTP_OK          = 200
+
+  #Set debug flag to to true to view response body
+  DEBUG            = false
+
+
+  def initialize(user_name,api_key)
+    @user_name    = user_name
+    @api_key      = api_key
+
+    @response_code = nil
+  end
+
+  def sendMessage(recipients_, message_, from_ = nil, bulkSMSMode_ = 1, enqueue_ = 0, keyword_ = nil, linkId_ = nil, retryDurationInHours_ = nil)
+    post_body = {
+        'username'    => @user_name,
+        'message'     => message_,
+        'to'          => recipients_,
+        'bulkSMSMode' => bulkSMSMode_
+    }
+    if (from_ != nil)
+      post_body['from'] = from_
+    end
+
+    if (enqueue_ > 0)
+      post_body['enqueue'] = enqueue_
+    end
+
+    if (keyword_ != nil)
+      post_body['keyword'] = keyword_
+    end
+
+    if (linkId_ != nil)
+      post_body['linkId'] = linkId_
+    end
+
+    if (retryDurationInHours_ != nil)
+      post_body['retryDurationInHours'] = retryDurationInHours_
+    end
+
+    response = executePost(SMS_URL, post_body)
+    if @response_code == HTTP_CREATED
+      reports = JSON.parse(response,:quirks_mode=>true)["SMSMessageData"]["Recipients"].collect { |entry|
+        StatusReport.new entry["number"], entry["status"], entry["cost"], entry["messageId"]
+      }
+      return reports
+    else
+      raise AfricasTalkingGatewayException, response
+    end
+  end
+
+  def fetchMessages(last_received_id_)
+    url = "#{SMS_URL}?username=#{@user_name}&lastReceivedId=#{last_received_id_}"
+    response = executePost(url)
+    if @response_code == HTTP_OK
+      messages = JSON.parse(response, :quirky_mode => true)["SMSMessageData"]["Messages"].collect { |msg|
+        SMSMessage.new msg["id"], msg["text"], msg["from"] , msg["to"], msg["linkId"], msg["date"]
+      }
+      return messages
+    else
+      raise AfricasTalkingGatewayException, response
+    end
+  end
+
+  def createSubcription(phone_number_, short_code_, keyword_)
+    if(phone_number_.length == 0 || short_code.length == 0 || keyword_.length == 0)
+      raise AfricasTalkingGatewayException, "Please supply phone number, short code and keyword"
+    end
+
+    post_body = {
+        'username'    => @user_name,
+        'phoneNumber' => phone_number_,
+        'shortCode'   => short_code_,
+        'keyword'     => keyword_
+    }
+    url      = "#{SUBSCRIPTION_URL}/create"
+    response = executePost(url, post_body)
+    if(@response_code == HTTP_CREATED)
+      return JSON.parse(response, :quirky_mode => true)
+    else
+      raise AfricasTalkingGatewayException, response
+    end
+  end
+
+  def deleteSubcription(phone_number_, short_code_, keyword_)
+    if(phone_number_.length == 0 || short_code.length == 0 || keyword_.length == 0)
+      raise AfricasTalkingGatewayException, "Please supply phone number, short code and keyword"
+    end
+
+    post_body = {
+        'username'    => @user_name,
+        'phoneNumber' => phone_number_,
+        'shortCode'   => short_code_,
+        'keyword'     => keyword_
+    }
+    url = "#{SUBSCRIPTION_URL}/delete"
+
+    response = executePost(url, post_body)
+
+    if(@response_code == HTTP_CREATED)
+      return JSON.parse(response, :quirky_mode => true)
+    else
+      raise AfricasTalkingGatewayException, response
+    end
+  end
+
+  def fetchPremiumSubscriptions(short_code_, keyword_, last_received_id_ = 0)
+    if(short_code_.length == 0 || keyword_.length == 0)
+      raise AfricasTalkingGatewayException, "Please supply the short code and keyword"
+    end
+
+    url = "#{SUBSCRIPTION_URL}?username=#{@user_name}&shortCode=#{short_code_}&keyword=#{keyword_}&lastReceivedId=#{last_received_id_}"
+
+    response = executePost(url)
+
+    if(@response_code == HTTP_OK)
+      subscriptions = JSON.parse(response)['responses'].collect{ |subscriber|
+        PremiumSubscriptionNumbers.new subscriber['phoneNumber'], subscriber['id']
+      }
+      return subscriptions
+    else
+      raise AfricasTalkingGatewayException, response
+    end
+  end
+
+  def call(from_, to_)
+    post_body = {
+        'username' => @user_name,
+        'from'     => from_,
+        'to'       => to_
+    }
+    response = executePost("#{VOICE_URL}/call", post_body)
+
+    jObject = JSON.parse(response, :quirky_mode => true);
+
+    raise AfricasTalkingGatewayException, jObject['ErrorMessage'] if jObject['Status'] != "Success"
+  end
+
+  def getNumQueuedCalls(phone_number_, queue_name_ = nil)
+    post_body = {
+        'username'    => @user_name,
+        'phoneNumbers' => phone_number_,
+    }
+    if (queue_name_ != nil)
+      post_body['queueName'] = queue_name_
+    end
+    url = "#{VOICE_URL}/queueStatus"
+    response = executePost(url, post_body)
+
+    jsObject = JSON.parse(response, :quirky_mode => true)
+    if (jsObject['Status'] == "Success")
+      return calls = jsObject['NumQueued']
+    else
+      raise AfricasTalkingGatewayException, jsObject['ErrorMessage']
+    end
+  end
+
+  def uploadMediaFile(url_string_)
+    post_body = {
+        'username' => @user_name,
+        'url'      => url_string_
+    }
+    url      = "#{VOICE_URL}/mediaUpload"
+    response = executePost(url, post_body)
+
+    jsObject = JSON.parse(response, :quirky_mode => true)
+
+    raise AfricasTalkingGatewayException, jsObject['ErrorMessage'] if jsObject['Status'] != "Success"
+  end
+
+  def sendAirtime(recipients_)
+    recipients = recipients_.to_json
+    post_body = {
+        'username'   => @user_name,
+        'recipients' => recipients
+    }
+    url      = "#{AIRTIME_URL}/send"
+    response = executePost(url, post_body)
+    if (@response_code == HTTP_CREATED)
+      responses = JSON.parse(response)['responses']
+      if (responses.length > 0)
+        results = responses.collect{ |result|
+          AirtimeResult.new result['status'], result['phoneNumber'],result['amount'],result['requestId'], result['errorMessage'], result['discount']
+        }
+        return results
+      else
+        raise AfricasTalkingGatewayException, response['errorMessage']
+      end
+    else
+      raise AfricasTalkingGatewayException, response
+    end
+
+  end
+
+  def getUserData()
+    url      = "#{USERDATA_URL}?username=#{@user_name}"
+    response = executePost(url)
+    if (@response_code == HTTP_OK)
+      result = JSON.parse(response, :quirky_mode =>true)['UserData']
+      return result
+    else
+      raise AfricasTalkingGatewayException, response
+    end
+  end
+
+  def executePost(url_, data_ = nil)
+    uri		 	     = URI.parse(url_)
+    http		     = Net::HTTP.new(uri.host, uri.port)
+    http.use_ssl = true
+    headers = {
+        "apikey" => @api_key,
+        "Accept" => "application/json"
+    }
+    if(data_ != nil)
+      request = Net::HTTP::Post.new(uri.request_uri)
+      request.set_form_data(data_)
+    else
+      request = Net::HTTP::Get.new(uri.request_uri)
+    end
+    request["apikey"] = @api_key
+    request["Accept"] = "application/json"
+
+    response          = http.request(request)
+
+    if (DEBUG)
+      puts "Full response #{response.body}"
+    end
+
+    @response_code = response.code.to_i
+    return response.body
+  end
+end

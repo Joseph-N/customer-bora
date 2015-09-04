@@ -14,7 +14,7 @@ class DashboardController < ApplicationController
 
   def custom_sms
     if params[:custom_numbers].present? && params[:custom_message].present?
-      $smsGateway.send_message(params[:custom_numbers],params[:custom_message], ENV["SHORT_CODE"])
+      $smsGateway.sendMessage(params[:custom_numbers],params[:custom_message], ENV["SHORT_CODE"])
       redirect_to dashboard_index_path, notice: "Successfully sent messages"
     else
       redirect_to dashboard_index_path, alert: "Message or Phone Numbers cannot be blank"
@@ -27,24 +27,24 @@ class DashboardController < ApplicationController
     else
       if params[:phone_numbers] && !params[:users].present? && !params[:message].blank? && !params[:phone_numbers].blank?
         recipients = params[:phone_numbers]
-        $smsGateway.send_message(recipients, params[:message], ENV['SHORT_CODE'])
+        $smsGateway.sendMessage(recipients, params[:message], ENV['SHORT_CODE'])
         redirect_to dashboard_index_path, notice: "Successfully sent messages to #{recipients.split(',').size} users"
       elsif params[:users] == "all_users" && !params[:message].blank?
         recipients = User.suscribed.map(&:phone).join(",")
 
-        $smsGateway.send_message(recipients, params[:message], ENV['SHORT_CODE'])
+        $smsGateway.sendMessage(recipients, params[:message], ENV['SHORT_CODE'])
         redirect_to dashboard_index_path, notice: "Successfully sent messages to #{recipients.split(',').size} users"
       elsif params[:users] == "only_location" && !params[:message].blank?
         recipients = User.suscribed.where.not(:location => nil).map(&:phone).join(",")
 
-        $smsGateway.send_message(recipients, params[:message], ENV['SHORT_CODE'])
+        $smsGateway.sendMessage(recipients, params[:message], ENV['SHORT_CODE'])
         redirect_to dashboard_index_path, notice: "Successfully sent messages to #{recipients.split(',').size} users"
       elsif params[:users] == "only_submission" && !params[:message].blank?
         recipients = User.suscribed.where.not(:submissions_count => nil).map(&:phone)
 
         Thread.new{
           recipients.each do |recipient|
-            $smsGateway.send_message(recipient, params[:message], ENV['SHORT_CODE'])
+            $smsGateway.sendMessage(recipient, params[:message], ENV['SHORT_CODE'])
           end
         }
         redirect_to dashboard_index_path, notice: "Successfully sent messages to #{recipients.split(',').size} users"
@@ -52,7 +52,7 @@ class DashboardController < ApplicationController
         uniq_ids = Submission.where("created_at >= ?",7.days.ago).map(&:user_id).uniq
         recipients = User.suscribed.where(:id => uniq_ids).map(&:phone).join(",")
 
-        $smsGateway.send_message(recipients, params[:message], ENV['SHORT_CODE'])
+        $smsGateway.sendMessage(recipients, params[:message], ENV['SHORT_CODE'])
         redirect_to dashboard_index_path, notice: "Successfully sent messages to #{recipients.split(',').size} users"
       else
         redirect_to dashboard_index_path, alert: "Ensure message is not blank"
