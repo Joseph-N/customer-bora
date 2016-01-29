@@ -23,7 +23,7 @@ production:
   encoding: unicode
   database: customerbora_production
   pool: 25
-  username: rbglive
+  username: deployer
   password: "rbglive2014"
   template: template0
   host: localhost
